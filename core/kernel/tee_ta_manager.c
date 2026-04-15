@@ -985,7 +985,7 @@ static uint32_t se_ta_enc_flag = 0U;
 TEE_Result boot_ta_type_init(void)
 {
 	uint32_t rsp_len = 0U;
-	cix_get_key_info(KEY_ID_TA_CONFIG_ENABLE, 4U, &se_ta_enc_flag, &rsp_len);
+	cix_get_key_info(KEY_ID_TA_CONFIG_ENABLE, 4U, (unsigned char*)&se_ta_enc_flag, &rsp_len);
 
 	return TEE_SUCCESS;
 }

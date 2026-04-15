@@ -57,15 +57,19 @@
 
 #define ENTROPY_MAX_LOOP    256     /**< Maximum amount to loop before error */
 
-static unsigned long int next = 1;
-
 /* Return next random integer */
+int rand(void);
 
 int rand(void)
 {
-	int rc, olen;
-	mbedtls_hardware_poll(NULL, &rc, sizeof(rc), &olen);
-	return rc;
+	int rc;
+	unsigned char buf[sizeof(rc)];
+	size_t olen;
+
+	mbedtls_hardware_poll(NULL, buf, sizeof(buf), &olen);
+	memcpy(&rc, buf, sizeof(rc));
+
+    return rc;
 }
 
 void mbedtls_entropy_init( mbedtls_entropy_context *ctx )

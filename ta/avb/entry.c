@@ -392,7 +392,6 @@ static TEE_Result write_vbmeta_public_key(uint32_t pt,
                 EMSG("Can't create vbmeta public key, res = 0x%x", res);
 
         TEE_CloseObject(h);
-out:
         TEE_Free(value);
 
         return res;
@@ -411,7 +410,7 @@ static TEE_Result read_vbmeta_public_key(uint32_t pt,
 	TEE_ObjectHandle h = TEE_HANDLE_NULL;
 	uint32_t value_sz = 0;
 	char *value = NULL;
-	size_t count = 0;
+	uint32_t count = 0;
 
 	if (pt != exp_pt)
 		return TEE_ERROR_BAD_PARAMETERS;

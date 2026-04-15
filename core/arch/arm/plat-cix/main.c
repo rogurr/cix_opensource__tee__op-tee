@@ -57,6 +57,10 @@ void main_init_gic(void);
 void main_secondary_init_gic(void);
 #endif
 
+#if defined(CFG_TE_DRIVER)
+void platform_get_te_configs(void **base, int *irq, int *host);
+#endif
+
 /*
  *******************************************************************************
  *                          VARIABLES SUPPLIED BY THIS MODULE
@@ -123,9 +127,6 @@ void set_cix_version_str(void)
 TEE_Result tee_otp_get_hw_unique_key(struct tee_hw_unique_key *hwkey)
 {
 	uint32_t len = 0U;
-	uint32_t ta_flag = 0U;
-	uint8_t key_data[32] = {0};
-	uint32_t key_len = 32;
 	cix_get_key_info(KEY_ID_DEVICE_KEY, KM_DEVICE_KEY_SIZE, hwkey->data, &len);
 
 	return TEE_SUCCESS;
@@ -187,15 +188,12 @@ void platform_get_te_configs(void **base, int *irq, int *host)
 TEE_Result tee_otp_get_ta_enc_key(uint32_t key_type __maybe_unused,
 					 uint8_t *buffer, size_t len)
 {
-	size_t key_len = 32;
+	uint32_t rsp_len = (uint32_t)len;
 	TEE_Result ret;
 
-	ret = cix_get_key_info(KEY_ID_MODEL_KEY, key_len, buffer, &len);
-	EMSG_RAW("Cix_en_key: %d\n", key_len);
-	DHEXDUMP(buffer, 32);
+	ret = cix_get_key_info(KEY_ID_MODEL_KEY, (uint32_t)len, buffer, &rsp_len);
+	EMSG_RAW("Cix_en_key: %u\n", rsp_len);
+	DHEXDUMP(buffer, rsp_len);
 
-	return TEE_SUCCESS;
+	return ret;
 }
-
-
-
